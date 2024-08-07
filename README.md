@@ -260,7 +260,7 @@ ingress.networking.k8s.io/arsys-c2d-ipfs       nginx   ipfs.domain       5.250.1
 ingress.networking.k8s.io/arsys-c2d-provider   nginx   provider.domain   5.250.184.10   80, 443   7m
 
 NAME                                     TYPE                 DATA   AGE
-secret/arsys-c2d-keys                    Opaque               4      7m
+secret/arsys-c2d-networks                Opaque               4      7m
 secret/arsys-c2d-postgres                Opaque               6      7m
 secret/ipfs-tls                          kubernetes.io/tls    2      7m
 secret/provider-tls                      kubernetes.io/tls    2      7m
