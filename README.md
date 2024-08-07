@@ -151,7 +151,10 @@ provider:
   image:
     tag: "v2.1.3"
   ipfsGateway: "https://ipfs.ocean.arlabdevelopments.com"
-  providerFeeToken: "0xdd0a0278f6BAF167999ccd8Aa6C11A9e2fA37F0a"
+  providerFeeToken: |
+     { "100": "0x0995527d3473b3a98c471f1ed8787acd77fbf009", 
+      "32456": "0x8a4826071983655805bf4f29828577cd6b1ac0cb",
+      "32457": "0xdd0a0278f6BAF167999ccd8Aa6C11A9e2fA37F0a" }
   aquariusURL: "https://aquarius.pontus-x.eu/"
   ingress:
     annotations:
