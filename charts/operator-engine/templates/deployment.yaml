@@ -40,7 +40,7 @@ spec:
         - name: diskGB
           value: {{ .Values.diskGB | default "1" | quote }}
         - name: STORAGE_CLASS
-          value: {{ .Values.storageClassname | required "It's required to specify an storageClassname to use the operator-engine" | quote }}
+          value: {{ .Values.jobStorageClassname | required "It's required to specify an storageClassname to use the operator-engine for jobs storage. It is recommended to use a storage class whose volumes are deleted when claim is released" | quote }}
         - name: maxJobDuration
           value: {{ .Values.maxJobDuration | default "900" | quote }}
         - name: priceMinute

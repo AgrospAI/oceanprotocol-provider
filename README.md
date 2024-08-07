@@ -165,7 +165,7 @@ operator-engine:
     repository: "rogargon/operator-engine"
     tag: "gke-gpu"
   description: "ArsysLab Data Room"
-  storageClassname: "ionos-enterprise-hdd"
+  jobStorageClassname: "ionos-enterprise-hdd"
   priceMinute: "0"
   ipfsOutputPrefix: "https://ipfs.ocean.arlabdevelopments.com/ipfs/"
   ipfsAdminLogsPrefix: "https://ipfs.ocean.arlabdevelopments.com/ipfs/"

@@ -80,7 +80,7 @@ operator-engine:
   ramGB: ""
   nGPU: ""
   diskGB: ""
-  storageClassname: ""
+  jobStorageClassname: ""
   maxJobDuration: ""
   priceMinute: ""
   ipfsOutput: ""
