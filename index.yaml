@@ -14,7 +14,7 @@ entries:
   oceanprotocol-provider:
   - apiVersion: v2
     appVersion: 0.1.1
-    created: "2024-08-07T01:35:14.873604891Z"
+    created: "2024-08-07T02:08:19.143174074Z"
     dependencies:
     - name: ipfs
       repository: ""
@@ -32,11 +32,11 @@ entries:
       repository: ""
       version: 0.1.1
     description: A Helm chart for Kubernetes to deploy a Ocean Protocol Provider
-    digest: 71d1f66062cd85f827f0d3b01855a0571a6e177c907262aea9f5444f4cf77458
+    digest: 015ab0123277140c1c9826d717b6360f9a99d28a4c0241615d0c2f9a01b66200
     name: oceanprotocol-provider
     type: application
     urls:
-    - https://github.com/rhizomik/oceanprotocol-provider/releases/download/oceanprotocol-provider-0.1.1/oceanprotocol-provider-0.1.1.tgz
+    - https://rhizomik.github.io/oceanprotocol-provider/oceanprotocol-provider-0.1.1.tgz
     version: 0.1.1
   operator-api:
   - apiVersion: v2
@@ -85,4 +85,4 @@ entries:
     urls:
     - https://github.com/arsys-internet/oceanprotocol-provider/releases/download/provider-0.1.0/provider-0.1.0.tgz
     version: 0.1.0
-generated: "2024-08-07T01:35:14.87361495Z"
+generated: "2024-08-07T02:08:19.141234053Z"
