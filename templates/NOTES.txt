@@ -5,15 +5,17 @@ The published services for {{ .Release.Name }} are:
 * IPFS: http{{ if $.Values.ipfs.ingress.tls }}s{{ end }}://{{ .Values.ipfs.ingress.host }}/
 * Provider: http{{ if $.Values.provider.ingress.tls }}s{{ end }}://{{ .Values.provider.ingress.host }}/
 
-If it is a new install, and not an upgrade, wait until everything is `Running`
-to initialise the PostgreSQL database with the following command:
+If it is a new install, and not an upgrade, wait until everything is `Running` using:
 
-$ kubectl run --namespace dataspace --attach --rm --restart=Never \
+$ kubectl get --namespace {{ .Release.Namespace }} pods
+
+Then, when all are running, initialise the PostgreSQL database with the following command:
+
+$ kubectl run --namespace {{ .Release.Namespace }} --attach --rm --restart=Never \
   --image curlimages/curl pgsqlinit -- \
   curl -X POST -H "accept: application/json" \
-    -H "Admin: postgresadmin" \
-    "http://arsys-c2d-operator-api.dataspace:8050/api/v1/operator/pgsqlinit"
+    -H "Admin: {{ if $.Values.networks.adminSecret }}{{ $.Values.networks.adminSecret }}{{ else }}myAdminSecret{{ end }}" \
+    "http://{{ .Release.Name }}-operator-api.{{ .Release.Namespace }}:8050/api/v1/operator/pgsqlinit"
 
-Once DB initialization it's done, then you can list the computational 
-environments available using this URL:
-  https://provider.domain/api/services/computeEnvironments
+Once DB initialization it's done, then you can list the computational environments available using this URL:
+ http{{ if $.Values.provider.ingress.tls }}s{{ end }}://{{ .Values.provider.ingress.host }}/api/services/computeEnvironments
