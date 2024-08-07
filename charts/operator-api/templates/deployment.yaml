@@ -52,7 +52,10 @@ spec:
         - name: DEFAULT_NAMESPACE
           value: {{ .Release.Namespace | quote }}
         - name: ALLOWED_ADMINS
-          value: '["postgresadmin"]'
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-networks
+              key: ALLOWED_ADMINS
         - name: POSTGRES_DB
           valueFrom:
             secretKeyRef:
