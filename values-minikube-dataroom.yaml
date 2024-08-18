@@ -1,0 +1,23 @@
+# Example values for a Minikube Data Room with GPU deployment
+
+image:
+  repository: "rogargon/operator-engine"
+  tag: "gke-gpu"
+description: "MiniKube Data Room"
+privateOperator: "0x0001234567890123456789012345678901234567890123456789012345678901"
+providerNamespace: "provider"
+providerReleaseName: "minikube-provider"
+db:
+  user: "postgresadmin"
+  pass: "postgresadminpass"
+jobStorageClassname: "standard"  # Use a storage class with 'reclaimPolicy: Delete', like Minikube's default storage class 'standard'
+priceMinute: "1"
+maxJobs: "1"
+maxJobDuration: "1800"
+nCPU: "4"
+ramGB: "8"
+diskGB: "5"
+nGPU: "0"
+gpuType: ""
+ipfsOutputPrefix: "https://ipfs.local/ipfs/"
+ipfsAdminLogsPrefix: "https://ipfs.local/ipfs/"

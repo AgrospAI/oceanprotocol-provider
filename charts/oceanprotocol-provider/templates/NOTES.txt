@@ -1,8 +1,8 @@
 Thank you for installing {{ .Chart.Name }}.
 
 The published services for {{ .Release.Name }} are:
-
-* IPFS: http{{ if $.Values.ipfs.ingress.tls }}s{{ end }}://{{ .Values.ipfs.ingress.host }}/
+{{ if $.Values.ipfs.enabled }}
+* IPFS: http{{ if $.Values.ipfs.ingress.tls }}s{{ end }}://{{ .Values.ipfs.ingress.host }}/{{ end }}
 * Provider: http{{ if $.Values.provider.ingress.tls }}s{{ end }}://{{ .Values.provider.ingress.host }}/
 
 If it is a new install, and not an upgrade, wait until everything is `Running` using:
@@ -19,3 +19,7 @@ $ kubectl run --namespace {{ .Release.Namespace }} --attach --rm --restart=Never
 
 Once DB initialization it's done, then you can list the computational environments available using this URL:
  http{{ if $.Values.provider.ingress.tls }}s{{ end }}://{{ .Values.provider.ingress.host }}/api/services/computeEnvironments
+
+Initially, none is available as they should be deployed in separate namespaces using the operator-engine chart. Use the example value-minikube-dataroom.yaml file as starting point to configure it and remember to provide the same operator private key that the one used by the provider. Moreover, there should be references to the Provider namespace and release name, or set them through the command line, like:
+
+$ helm upgrade --install --namespace dataroom --create-namespace --values ./values-minikube-dataroom.yaml --set providerNamespace={{ .Release.Namespace }} --set providerReleaseName={{ .Release.Name }} dataroom oceanprotocol-provider/operator-engine

@@ -15,22 +15,21 @@ type: application
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.1.1
+version: 0.2.0
 
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application. Versions are not expected to
 # follow Semantic Versioning. They should reflect the version the application is using.
 # It is recommended to use it with quotes.
-appVersion: "0.1.1"
+appVersion: "0.2.0"
 
 dependencies:
   - name: ipfs
-    version: 0.1.1
-  - name: operator-api
-    version: 0.1.1
-  - name: operator-engine
-    version: 0.1.1
+    version: 0.2.0
+    condition: ipfs.enabled
   - name: postgres
-    version: 0.1.1
+    version: 0.2.0
   - name: provider
-    version: 0.1.1
+    version: 0.2.0
+  - name: operator-api
+    version: 0.2.0

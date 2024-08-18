@@ -1,4 +1,4 @@
-# Default values for oceanprotocol-provider.
+# Default values for provider.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -66,31 +66,6 @@ provider:
     classname: ""
     host: ""
     secretName: ""
-
-operator-engine:
-  replicaCount:
-  image:
-    repository: ""
-    tag: ""
-    digest: ""
-    pullPolicy: ""
-  description: ""
-  maxJobs: ""
-  nCPU: ""
-  ramGB: ""
-  nGPU: ""
-  diskGB: ""
-  jobStorageClassname: ""
-  maxJobDuration: ""
-  priceMinute: ""
-  ipfsOutput: ""
-  ipfsOutputPrefix: ""
-  ipfsAdminLogs: ""
-  ipfsAdminLogsPrefix: ""
-  ipfsExpiryTime: ""
-  ipfsLogLevel: ""
-  confContainer: ""
-  pubContainer: ""
 
 operator-api:
   replicaCount:

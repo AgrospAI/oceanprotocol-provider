@@ -31,10 +31,10 @@ Official Ocean Protocol documentation of [Compute to data infrastructure](https:
    - repository: oceanprotocol/operator-service
    - tag: v4main
  - Operator Engine:
-   - repository: rodargon/operator-engine
+   - repository: rogargon/operator-engine
    - tag: gke-gpu
  - POD Configuration:
-   - repository: rodargon/pod-configuration
+   - repository: rogargon/pod-configuration
    - tag: timeout
  - Operator Publishing:
    - repository: oceanprotocol/pod-publishing
@@ -42,54 +42,64 @@ Official Ocean Protocol documentation of [Compute to data infrastructure](https:
 
 ## Directory structure
 
+To facilitate the deployment of diverse "Data Room" configurations on top of the same Compute-to-Data Provider, two separate charts are provided. The first one `oceanprotocol-provider` contains the main components of the provider as subcharts, including the `provider` itself, the `operator-service` providing the API to the Compute-to-Data environment and including a `postgres` database, plus an optional `ipfs` service to store computation results. 
+
+The second chart, `operator-engine`, contains the operator engine to manage the individual computational environments where Compute-to-Data jobs will be scheduled. They will communicate with the rest of the Compute-to-Dat environment through its `postgres` database. Consequently, it will require the same `postgres` database configuration as the provider. Moreover, it will need to know the private key of the provider operator to securely interact with the provider.
+
+Finally, in addition to this README file, the directory contains a `values-minikube-provider.yaml` file with a sample configuration to deploy the provider on a MiniKube cluster, as detailed later in this README. Moreover, there are two files with sample configurations to deploy data rooms for the provider, `values-minikube-dataroom.yaml` and `values-minikube-dataroom-gpu.yaml` on the same cluster.
+
 ```plain
 oceanprotocol-provider
 ├── charts
-│   ├── ipfs
+│   ├── oceanprotocol-provider
 │   │   ├── Chart.yaml
+│   │   ├── charts
+│   │   │   ├── ipfs
+│   │   │   │   ├── Chart.yaml
+│   │   │   │   ├── templates
+│   │   │   │   │   ├── deployment.yaml
+│   │   │   │   │   ├── ingress.yaml
+│   │   │   │   │   ├── pvc.yaml
+│   │   │   │   │   └── service.yaml
+│   │   │   │   └── values.yaml
+│   │   │   ├── operator-api
+│   │   │   │   ├── Chart.yaml
+│   │   │   │   ├── templates
+│   │   │   │   │   ├── deployment.yaml
+│   │   │   │   │   └── service.yaml
+│   │   │   │   └── values.yaml
+│   │   │   ├── postgres
+│   │   │   │   ├── Chart.yaml
+│   │   │   │   ├── templates
+│   │   │   │   │   ├── deployment.yaml
+│   │   │   │   │   ├── pvc.yaml
+│   │   │   │   │   └── service.yaml
+│   │   │   │   └── values.yaml
+│   │   │   └── provider
+│   │   │       ├── Chart.yaml
+│   │   │       ├── templates
+│   │   │       │   ├── deployment.yaml
+│   │   │       │   ├── ingress.yaml
+│   │   │       │   └── service.yaml
+│   │   │       └── values.yaml
 │   │   ├── templates
-│   │   │   ├── deployment.yaml
-│   │   │   ├── ingress.yaml
-│   │   │   ├── pvc.yaml
-│   │   │   └── service.yaml
+│   │   │   ├── NOTES.txt
+│   │   │   └── secrets.yaml
 │   │   └── values.yaml
-│   ├── operator-api
-│   │   ├── Chart.yaml
-│   │   ├── templates
-│   │   │   ├── deployment.yaml
-│   │   │   └── service.yaml
-│   │   └── values.yaml
-│   ├── operator-engine
-│   │   ├── Chart.yaml
-│   │   ├── templates
-│   │   │   ├── deployment.yaml
-│   │   │   ├── role-binding.yaml
-│   │   │   ├── role.yaml
-│   │   │   └── service-account.yaml
-│   │   └── values.yaml
-│   ├── postgres
-│   │   ├── Chart.yaml
-│   │   ├── templates
-│   │   │   ├── deployment.yaml
-│   │   │   ├── pvc.yaml
-│   │   │   └── service.yaml
-│   │   └── values.yaml
-│   └── provider
+│   └── operator-engine
 │       ├── Chart.yaml
 │       ├── templates
 │       │   ├── deployment.yaml
-│       │   ├── ingress.yaml
-│       │   └── service.yaml
+│       │   ├── role-binding.yaml
+│       │   ├── role.yaml
+│       │   ├── secrets.yaml
+│       │   └── service-account.yaml
 │       └── values.yaml
-├── Chart.yaml
 ├── LICENSE
 ├── README.md
-├── templates
-│   ├── NOTES.txt
-│   └── secrets.yaml
-└── values.yaml
-
-12 directories, 32 files
+├── values-minikube-dataroom-gpu.yaml
+├── values-minikube-dataroom.yaml
+└── values-minikube-provider.yaml
 ```
 
 ## Install
@@ -99,7 +109,7 @@ oceanprotocol-provider
 Add a new repository with this chart:
 
 ```console
-helm repo add oceanprotocol-provider https://arsys-internet.github.io/oceanprotocol-provider/
+helm repo add oceanprotocol-provider https://rhizomik.github.io/oceanprotocol-provider/
 ```
 
 If everything works fine you should get something like this:
@@ -110,7 +120,7 @@ If everything works fine you should get something like this:
 
 ### Personalize the deployment
 
-Create a values file adapted to your kubernetes cluster configuration:
+Create a values file adapted to your kubernetes cluster configuration. For instance, for the provider deployment:
 
 ```yaml
 # Default values for the deployment of oceanprotocol-provider in Arsys DCD Managed Kubernetes.
@@ -119,16 +129,12 @@ Create a values file adapted to your kubernetes cluster configuration:
 
 networks:
   networksURL: |
-    { "100": "https://rpc.genx.minimal-gaia-x.eu",
-      "32456": "https://rpc.dev.pontus-x.eu",
+    { "32456": "https://rpc.dev.pontus-x.eu",
       "32457": "https://rpc.test.pontus-x.eu" }
   privateProviders: |
-    { "100": "0x0...",
-      "32456": "0x0...",
+    { "32456": "0x0...",
       "32457": "0x0..." }
   publicProviders: |
-    [ "0x0...",
-    [ "0x0...",
     [ "0x0..." ]
   privateOperator: "0x0..."
   publicOperator: "0x0..."
@@ -146,6 +152,9 @@ ipfs:
 postgres:
   storage:
     classname: "ionos-enterprise-ssd"
+  db:
+     user: "postgresadmin"
+     pass: "postgresadminpass"
 
 provider:
   image:
@@ -162,17 +171,26 @@ provider:
     host: "provider.ocean.arlabdevelopments.com"
     tls: true
     secretName: provider-tls
+```
 
-operator-engine:
-  image:
-    repository: "rogargon/operator-engine"
-    tag: "gke-gpu"
-  description: "ArsysLab Data Room"
-  jobStorageClassname: "ionos-enterprise-hdd"
-  priceMinute: "0"
-  ipfsOutputPrefix: "https://ipfs.ocean.arlabdevelopments.com/ipfs/"
-  ipfsAdminLogsPrefix: "https://ipfs.ocean.arlabdevelopments.com/ipfs/"
-  podConfContainer: "rogargon/pod-configuration:timeout"
+And to deploy the operator engine:
+
+```yaml
+image:
+ repository: "rogargon/operator-engine"
+ tag: "gke-gpu"
+description: "ArsysLab Data Room"
+jobStorageClassname: "ionos-enterprise-hdd"
+privateOperator: "0x0..."
+providerNamespace: "dataspace"
+providerReleaseName: "arsys-c2d"
+db:
+   user: "postgresadmin"
+   pass: "postgresadminpass"
+priceMinute: "0"
+ipfsOutputPrefix: "https://ipfs.ocean.arlabdevelopments.com/ipfs/"
+ipfsAdminLogsPrefix: "https://ipfs.ocean.arlabdevelopments.com/ipfs/"
+podConfContainer: "rogargon/pod-configuration:timeout"
 ```
 
 ### Deploy the provider
@@ -226,7 +244,6 @@ $ kubectl get --namespace dataspace --output wide all,jobs,persistentvolumeclaim
 NAME                                            READY   STATUS    RESTARTS   AGE     IP              NODE                       NOMINATED NODE   READINESS GATES
 pod/arsys-c2d-ipfs-84d4956dd9-gxwwf             1/1     Running   0          7m      10.211.46.218   oceanprotocol-dbpc6c4vhq   <none>           <none>
 pod/arsys-c2d-operator-api-64cf4fdd9f-97kv9     1/1     Running   0          7m      10.211.46.217   oceanprotocol-dbpc6c4vhq   <none>           <none>
-pod/arsys-c2d-operator-engine-cb45cf98c-6m7bg   1/1     Running   0          7m      10.211.46.230   oceanprotocol-dbpc6c4vhq   <none>           <none>
 pod/arsys-c2d-postgres-7f6f9ddc4b-cqvzm         1/1     Running   0          7m      10.211.46.219   oceanprotocol-dbpc6c4vhq   <none>           <none>
 pod/arsys-c2d-provider-7b4db6567d-w64wv         1/1     Running   0          7m      10.222.91.215   oceanprotocol-sj5zd352ss   <none>           <none>
 
@@ -239,14 +256,12 @@ service/arsys-c2d-provider       ClusterIP   10.233.42.212   <none>        8030/
 NAME                                        READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS                  IMAGES                                  SELECTOR
 deployment.apps/arsys-c2d-ipfs              1/1     1            1           7m    arsys-c2d-ipfs              ipfs/go-ipfs:latest                     app=arsys-c2d-ipfs
 deployment.apps/arsys-c2d-operator-api      1/1     1            1           7m    arsys-c2d-operator-api      oceanprotocol/operator-service:v4main   app=arsys-c2d-operator-api
-deployment.apps/arsys-c2d-operator-engine   1/1     1            1           7m    arsys-c2d-operator-engine   rogargon/operator-engine:gke-gpu        app=arsys-c2d-operator-engine
 deployment.apps/arsys-c2d-postgres          1/1     1            1           7m    arsys-c2d-postgres          postgres:10.4                           app=arsys-c2d-postgres
 deployment.apps/arsys-c2d-provider          1/1     1            1           7m    provider                    oceanprotocol/provider-py:v2.1.3        app=arsys-c2d-provider
 
 NAME                                                  DESIRED   CURRENT   READY   AGE     CONTAINERS                  IMAGES                                  SELECTOR
 replicaset.apps/arsys-c2d-ipfs-84d4956dd9             1         1         1       7m      arsys-c2d-ipfs              ipfs/go-ipfs:latest                     app=arsys-c2d-ipfs,pod-template-hash=84d4956dd9
 replicaset.apps/arsys-c2d-operator-api-64cf4fdd9f     1         1         1       7m      arsys-c2d-operator-api      oceanprotocol/operator-service:v4main   app=arsys-c2d-operator-api,pod-template-hash=64cf4fdd9f
-replicaset.apps/arsys-c2d-operator-engine-cb45cf98c   1         1         1       7m      arsys-c2d-operator-engine   rogargon/operator-engine:gke-gpu        app=arsys-c2d-operator-engine,pod-template-hash=cb45cf98c
 replicaset.apps/arsys-c2d-postgres-7f6f9ddc4b         1         1         1       7m      arsys-c2d-postgres          postgres:10.4                           app=arsys-c2d-postgres,pod-template-hash=7f6f9ddc4b
 replicaset.apps/arsys-c2d-provider-7b4db6567d         1         1         1       7m      provider                    oceanprotocol/provider-py:v2.1.3        app=arsys-c2d-provider,pod-template-hash=7b4db6567d
 
@@ -279,8 +294,7 @@ certificate.cert-manager.io/provider-tls   True    provider-tls   letsencrypt-pr
 
 ## Example with MiniKube cluster
 
-Instructions to deploy [OceanProtocol Provider](https://docs.oceanprotocol.com/developers/provider) on a
-[MiniKube](https://minikube.sigs.k8s.io/docs/start/) Kubernetes cluster, installed following the instructions
+Detailed instructions to deploy [OceanProtocol Provider](https://docs.oceanprotocol.com/developers/provider) on a [MiniKube](https://minikube.sigs.k8s.io/docs/start/) Kubernetes cluster, installed following the instructions
 on the previous link.
 
 After starting the cluster, enable nginx ingress by running:
@@ -303,23 +317,22 @@ First, add the repository with this chart:
 helm repo add oceanprotocol-provider https://rhizomik.github.io/oceanprotocol-provider/
 ```
 
-Then, install it using the provided sample values for a MiniKube deployment in `values-minikube.yaml`:
+Then, install it using the provided sample values for a MiniKube deployment in `values-minikube-provider.yaml`:
 
 ```shell
-helm upgrade --install --namespace dataspace --create-namespace --values ./values-minikube.yaml minikube-ctd oceanprotocol-provider/oceanprotocol-provider
+helm upgrade --install --namespace provider --create-namespace --values ./values-minikube-provider.yaml minikube-provider oceanprotocol-provider/oceanprotocol-provider
 ```
 
-Then, follow the instructions on the output of the Helm command. First, to wait until all pods are running, which can
-be checked using the indicated command, for instance:
+Then, follow the instructions on the output of the Helm command. First, to wait until all pods are running, which can be checked using the indicated command, for instance:
 
 ```shell
-kubectl get --namespace dataspace pods
+kubectl get --namespace provider pods
 ```
 
 Second, to initialize the PostgreSQL database using the command also indicated in Helm's output, for instance:
 
 ```shell
-kubectl run --namespace dataspace --attach --rm --restart=Never \
+kubectl run --namespace provider --attach --rm --restart=Never \
   --image curlimages/curl pgsqlinit -- \
   curl -X POST -H "accept: application/json" \
     -H "Admin: myAdminSecret" \
@@ -328,3 +341,9 @@ kubectl run --namespace dataspace --attach --rm --restart=Never \
 
 Finally, to check the provider is running, you can list the computational environments available using the
 URL indicated in the output, for instance: http://provider.local/api/services/computeEnvironments
+
+Initially, none is available as they should be deployed in separate Kubernetes namespaces using the operator-engine chart. Use the example `value-minikube-dataroom.yaml` file as starting point to configure it and remember to provide the same operator private key that the one used by the provider. Moreover, there should be references to the Provider's namespace and release name, or you can also set them through the command line like in:
+
+```shell
+helm upgrade --install --namespace dataroom --create-namespace --values ./values-minikube-dataroom.yaml --set providerNamespace=provider --set providerReleaseName=minikube-provider dataroom oceanprotocol-provider/operator-engine
+```

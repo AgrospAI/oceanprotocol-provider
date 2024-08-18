@@ -1,3 +1,36 @@
-# Default values for ipfs.
+# Default values for operator-engine.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
+
+replicaCount:
+image:
+  repository: ""
+  tag: ""
+  digest: ""
+  pullPolicy: ""
+description: ""
+privateOperator: ""
+db:
+  name: ""
+  user: ""
+  pass: ""
+  host: ""
+  port: ""
+providerReleaseName: ""
+providerNamespace: ""
+maxJobs: ""
+nCPU: ""
+ramGB: ""
+nGPU: ""
+diskGB: ""
+jobStorageClassname: ""
+maxJobDuration: ""
+priceMinute: ""
+ipfsOutput: ""
+ipfsOutputPrefix: ""
+ipfsAdminLogs: ""
+ipfsAdminLogsPrefix: ""
+ipfsExpiryTime: ""
+ipfsLogLevel: ""
+confContainer: ""
+pubContainer: ""
