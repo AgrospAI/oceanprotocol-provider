@@ -62,6 +62,8 @@ spec:
               value: {{ .Values.aquariusURL | required "The aquarius URL it's a mandatory value" | quote }}
             - name: PROVIDER_FEE_TOKEN
               value: {{ .Values.providerFeeToken | required "The provider fee token it's a mandatory value" | quote }}
+            - name: ALLOW_NON_PUBLIC_IP
+              value: "true"
           ports:
             - containerPort: 8030
               protocol: TCP

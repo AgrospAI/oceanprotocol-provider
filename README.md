@@ -109,7 +109,7 @@ oceanprotocol-provider
 Add a new repository with this chart:
 
 ```console
-helm repo add oceanprotocol-provider https://rhizomik.github.io/oceanprotocol-provider/
+helm repo add oceanprotocol-provider https://agrospai.github.io/oceanprotocol-provider/
 ```
 
 If everything works fine you should get something like this:
@@ -314,7 +314,7 @@ Once the Kubernetes cluster is ready, it is time to install the Helm chart for t
 First, add the repository with this chart:
 
 ```console
-helm repo add oceanprotocol-provider https://rhizomik.github.io/oceanprotocol-provider/
+helm repo add oceanprotocol-provider https://agrospai.github.io/oceanprotocol-provider/
 ```
 
 Then, install it using the provided sample values for a MiniKube deployment in `values-minikube-provider.yaml`:
