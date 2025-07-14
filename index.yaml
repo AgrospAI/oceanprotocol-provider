@@ -51,6 +51,17 @@ entries:
     version: 0.2.0
   operator-engine:
   - apiVersion: v2
+    appVersion: 0.2.1
+    created: "2025-07-14T20:04:50.338352515Z"
+    description: A Helm chart for Kubernetes to deploy the Ocean Protocol Operator
+      Engine service
+    digest: 4c2b2cff0bf63ad9c0145e8df746b20c0c6e3a18abaf5d306bc2d0e8995e16af
+    name: operator-engine
+    type: application
+    urls:
+    - https://github.com/AgrospAI/oceanprotocol-provider/releases/download/operator-engine-0.2.1/operator-engine-0.2.1.tgz
+    version: 0.2.1
+  - apiVersion: v2
     appVersion: 0.2.0
     created: "2024-08-18T02:31:11.471890222Z"
     description: A Helm chart for Kubernetes to deploy the Ocean Protocol Operator
@@ -61,4 +72,4 @@ entries:
     urls:
     - https://github.com/rhizomik/oceanprotocol-provider/releases/download/operator-engine-0.2.0/operator-engine-0.2.0.tgz
     version: 0.2.0
-generated: "2025-07-12T09:07:46.536031915Z"
+generated: "2025-07-14T20:04:50.338363766Z"
