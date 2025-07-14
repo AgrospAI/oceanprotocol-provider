@@ -93,6 +93,10 @@ spec:
             secretKeyRef:
               name: {{ .Release.Name }}-provider
               key: POSTGRES_PORT
+        {{- if .Values.nodeSelector }}
+        - name: NODE_SELECTOR
+          value: {{ .Values.nodeSelector | quote }}
+        {{- end }}
         resources: {}
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
