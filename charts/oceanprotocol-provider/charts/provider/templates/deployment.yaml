@@ -64,9 +64,37 @@ spec:
               value: {{ .Values.providerFeeToken | required "The provider fee token it's a mandatory value" | quote }}
             - name: ALLOW_NON_PUBLIC_IP
               value: "true"
+            {{- range .Values.extraEnv }}
+            - name: {{ .name }}
+              {{- if .value }}
+              value: {{ .value | quote }}
+              {{- else if .valueFrom }}
+              valueFrom:
+                {{- toYaml .valueFrom | nindent 16 }}
+              {{- end }}
+            {{- end }}
+          {{- if .Values.extraEnvFrom }}
+          envFrom:
+            {{- range .Values.extraEnvFrom }}
+            - {{- toYaml . | nindent 14 }}
+            {{- end }}
+          {{- end }}
           ports:
             - containerPort: 8030
               protocol: TCP
+          {{- if or .Values.extraConfigMaps .Values.extraSecrets }}
+          volumeMounts:
+            {{- range .Values.extraConfigMaps }}
+            - name: {{ .name }}-volume
+              mountPath: {{ .mountPath }}
+              readOnly: {{ .readOnly | default true }}
+            {{- end }}
+            {{- range .Values.extraSecrets }}
+            - name: {{ .name }}-volume
+              mountPath: {{ .mountPath }}
+              readOnly: {{ .readOnly | default true }}
+            {{- end }}
+          {{- end }}
           resources:
             limits:
               cpu: 500m
@@ -76,6 +104,19 @@ spec:
               memory: 700Mi
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
+      {{- if or .Values.extraConfigMaps .Values.extraSecrets }}
+      volumes:
+        {{- range .Values.extraConfigMaps }}
+        - name: {{ .name }}-volume
+          configMap:
+            name: {{ .name }}
+        {{- end }}
+        {{- range .Values.extraSecrets }}
+        - name: {{ .name }}-volume
+          secret:
+            secretName: {{ .name }}
+        {{- end }}
+      {{- end }}
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       schedulerName: default-scheduler

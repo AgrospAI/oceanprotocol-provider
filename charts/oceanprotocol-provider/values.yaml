@@ -59,6 +59,31 @@ provider:
   operatorAPI: ""
   providerFeeToken: ""
   aquariusURL: ""
+  # Extra environment variables to be added to the provider container
+  extraEnv: []
+    # - name: CUSTOM_ENV_VAR
+    #   value: "custom_value"
+    # - name: SECRET_ENV_VAR
+    #   valueFrom:
+    #     secretKeyRef:
+    #       name: my-secret
+    #       key: secret-key
+  # Extra environment variables from ConfigMaps
+  extraEnvFrom: []
+    # - configMapRef:
+    #     name: my-configmap
+    # - secretRef:
+    #     name: my-secret
+  # Extra ConfigMaps to mount as volumes
+  extraConfigMaps: []
+    # - name: my-configmap
+    #   mountPath: /path/to/mount
+    #   readOnly: true
+  # Extra Secrets to mount as volumes
+  extraSecrets: []
+    # - name: my-secret
+    #   mountPath: /path/to/mount
+    #   readOnly: true
   ingress:
     enabled: true
     annotations: {}
